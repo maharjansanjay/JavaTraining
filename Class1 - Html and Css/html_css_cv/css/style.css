@@ -1,17 +1,30 @@
+* { margin: 0px; padding: 0px; }
+
+body { 
+	line-height: 40px; 
+	}
+
+.main-wrapper{
+	width: 90%;
+	margin: 0 auto;
+}
+
 .cvSection {
     border-bottom: 1px solid black;
+    overflow: hidden;
     float: none;
+    padding: 20px;
 }
 
 .fieldValue {
-    clear: left;
-    display: block;
 }
 
-.field {
+ .field {
     float: left;
+    width: 10%;
 }
 
-.value {
+ .value {
     float: left;
+    width: 90%;
 }
