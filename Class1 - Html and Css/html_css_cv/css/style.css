@@ -1,0 +1,17 @@
+.cvSection {
+    border-bottom: 1px solid black;
+    float: none;
+}
+
+.fieldValue {
+    clear: left;
+    display: block;
+}
+
+.field {
+    float: left;
+}
+
+.value {
+    float: left;
+}
