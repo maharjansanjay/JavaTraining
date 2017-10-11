@@ -28,3 +28,6 @@ body {
     float: left;
     width: 90%;
 }
+
+.cvLeftContaint{width: 80%;float: left;}
+.cvRightContaint{width: 20%;float: right; text-align: right;}
