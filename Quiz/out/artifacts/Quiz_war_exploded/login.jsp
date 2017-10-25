@@ -37,8 +37,9 @@
         <p class="login-box-msg">Sign in to start your session</p>
 
         <form action="/login" method="post">
+            <input type="hidden" name="page" value="Login" />
             <div class="form-group has-feedback">
-                <input name="username" type="email" class="form-control" placeholder="Username">
+                <input name="username" type="text" class="form-control" placeholder="Username">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
@@ -91,7 +92,7 @@
             radioClass: 'iradio_square-blue',
             increaseArea: '20%' // optional
         });
-    });
+  });
 </script>
 </body>
 </html>

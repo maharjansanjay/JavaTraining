@@ -14,15 +14,24 @@ public class DatabaseConnection {
     public DatabaseConnection()
     {
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
-//
-//    public PreparedStatement getPreparedStatement(String query)
-//    {
-//
-//    }
+
+    public PreparedStatement getPreparedStatement(String query)
+    {
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ps;
+    }
 
 }
