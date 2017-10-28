@@ -11,6 +11,7 @@ import java.util.List;
 
 public class UserService {
     private DatabaseConnection db;
+    public static User nullObject = null;
 
     public UserService()
     {
@@ -62,5 +63,91 @@ public class UserService {
         }
 
         return lu;
+    }
+
+    public User GetUser(int id) {
+        User user = null;
+        PreparedStatement ps = db.getPreparedStatement("select * from quiz.users where id = ?");
+
+        try {
+            ps.setInt(1, id);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            while (rs.next()) {
+                user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("role"));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
+    public void AddUser(int id, String username, String password, String role) {
+        PreparedStatement ps;
+        String query = null;
+        if (id > 0) {
+            query = "update quiz.users set username = ?,"
+                            + (password.isEmpty() ? "" : "password = ?, ")
+                            + "role = ? where id = ?";
+            ps = db.getPreparedStatement(query);
+            try {
+                ps.setString(1, username);
+                if (!password.isEmpty()) {
+                    ps.setString(2, password);
+                    ps.setString(3, role);
+                    ps.setInt(4, id);
+                }
+                else {
+                    ps.setString(2, role);
+                    ps.setInt(3, id);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            query = "insert into quiz.users (username, password, role) values (?, ?, ?)";
+            ps = db.getPreparedStatement(query);
+
+            try {
+                ps.setString(1, username);
+                ps.setString(2, password);
+                ps.setString(3, role);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void DeleteUser(int id) {
+        PreparedStatement ps = db.getPreparedStatement("delete from quiz.users where id = ? limit 1");
+        try {
+            ps.setInt(1, id);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

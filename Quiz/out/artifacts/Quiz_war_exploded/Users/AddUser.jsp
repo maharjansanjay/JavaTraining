@@ -52,6 +52,7 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
     <%@ include file="/Shared/mainHeader.jsp"%>
     <%@ include file="/Shared/mainSidebar.jsp"%>
 
@@ -65,46 +66,43 @@
 
         <!-- Main content -->
         <section class="content">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">Data Table With Full Features</h3>
+            <div class="login-box-body">
+                <p class="login-box-msg">User Details</p>
+
+                <form action="/users" method="post">
+                    <input type="hidden" name="page" value="AddUserPost"/>
+                    <input type="hidden" name="id" value="${id}" />
+
+                    <c:if test = "${error != null}">
+                        <div class="danger">
+                                ${error}
                         </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <table class="table table-bordered table-hover dataTable" role="grid">
-                                <thead>
-                                <tr role="row">
-                                    <th class="sorting_asc" tabindex="0">Username</th>
-                                    <th class="sorting" tabindex="0" >Password</th>
-                                    <th class="sorting" tabindex="0" >Role</th>
-                                    <th tabindex="0" >Action</th>
-                                </thead>
-                                <tbody>
-                                <c:forEach var="user" items="${users}">
-                                    <tr role="row">
-                                        <td>${user.username}</td>
-                                        <td>${user.password}</td>
-                                        <td>${user.role}</td>
-                                        <td>
-                                            <a href="/users?page=EditUser&id=${user.id}"><span class="glyphicon glyphicon-edit" title="Edit User"></span></a>
-                                            &nbsp;&nbsp;<a href="/users?page=Delete&id=${user.id}"><span class="glyphicon glyphicon-trash" title="Delete User"></span></a>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.box-body -->
-                        <div>
-                            <a class="btn btn-primary" href="/users?page=AddUser">Add new user</a>
-                        </div>
+                    </c:if>
+                    <div class="form-group has-feedback">
+                        <input name="username" type="text" class="form-control" placeholder="Username" value="${username}" />
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
                     </div>
-                    <!-- /.box -->
-                </div>
-                <!-- /.col -->
+                    <div class="form-group has-feedback">
+                        <input name="password" type="password" class="form-control" placeholder="Password" >
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <input name="password-confirm" type="password" class="form-control" placeholder="Confirm Password">
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <input name="role" type="text" class="form-control" placeholder="User Role" value="${role}"  />
+                        <span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Save</button>
+                    </div>
+                    <!-- /.col -->
+                </form>
+
             </div>
+            <!-- /.login-box-body -->
         </section>
         <!-- /.content -->
     </div>
