@@ -69,33 +69,42 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Data Table With Full Features</h3>
+                            <h3 class="box-title">Question List</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
                             <table class="table table-bordered table-hover dataTable" role="grid">
                                 <thead>
                                 <tr role="row">
-                                    <th class="sorting_asc" tabindex="0">Username</th>
-                                    <th class="sorting" tabindex="0" >Password</th>
-                                    <th class="sorting" tabindex="0" >Role</th>
-                                    <th tabindex="0" >Action</th>
+                                    <th class="sorting_asc" tabindex="0">Question</th>
+                                    <th class="sorting" tabindex="0" >Options</th>
+                                    <th class="sorting" tabindex="0" >Correct Answer</th>
+                                    <th tabindex="0" >Question Categories</th>
+                                    <th tabindex="0">Action</th>
                                 </thead>
                                 <tbody>
-                                <c:forEach var="user" items="${users}">
+                                <c:forEach var="question" items="${questions}">
                                     <tr role="row">
-                                        <td>${user.username}</td>
-                                        <td>${user.password}</td>
+                                        <td>${question.questionText}</td>
                                         <td>
                                             <ul>
-                                            <c:forEach var="userRole" items="${user.roles}">
-                                                <li>${userRole.description}</li>
-                                            </c:forEach>
+                                                <li>${question.option1}</li>
+                                                <li>${question.option2}</li>
+                                                <li>${question.option3}</li>
+                                                <li>${question.option4}</li>
+                                            </ul>
+                                        </td>
+                                        <td>${question.correctAns}</td>
+                                        <td>
+                                            <ul>
+                                                <c:forEach var="category" items="${question.categories}">
+                                                    <li>${category.category}</li>
+                                                </c:forEach>
                                             </ul>
                                         </td>
                                         <td>
-                                            <a href="/users?page=EditUser&id=${user.id}"><span class="glyphicon glyphicon-edit" title="Edit User"></span></a>
-                                            &nbsp;&nbsp;<a href="/users?page=DeleteUser&id=${user.id}"><span class="glyphicon glyphicon-trash" title="Delete User"></span></a>
+                                            <a href="/question?page=EditQuestion&id=${question.id}"><span class="glyphicon glyphicon-edit" title="Edit Question"></span></a>
+                                            &nbsp;&nbsp;<a href="/question?page=DeleteQuestion&id=${question.id}"><span class="glyphicon glyphicon-trash" title="Delete Question"></span></a>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -104,7 +113,7 @@
                         </div>
                         <!-- /.box-body -->
                         <div>
-                            <a class="btn btn-primary" href="/users?page=AddUser">Add new user</a>
+                            <a class="btn btn-primary" href="/question?page=AddQuestion">Add new question</a>
                         </div>
                     </div>
                     <!-- /.box -->

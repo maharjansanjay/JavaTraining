@@ -52,6 +52,7 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
+
     <%@ include file="/Shared/mainHeader.jsp"%>
     <%@ include file="/Shared/mainSidebar.jsp"%>
 
@@ -65,52 +66,53 @@
 
         <!-- Main content -->
         <section class="content">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">Data Table With Full Features</h3>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <table class="table table-bordered table-hover dataTable" role="grid">
-                                <thead>
-                                <tr role="row">
-                                    <th class="sorting_asc" tabindex="0">Username</th>
-                                    <th class="sorting" tabindex="0" >Password</th>
-                                    <th class="sorting" tabindex="0" >Role</th>
-                                    <th tabindex="0" >Action</th>
-                                </thead>
-                                <tbody>
-                                <c:forEach var="user" items="${users}">
-                                    <tr role="row">
-                                        <td>${user.username}</td>
-                                        <td>${user.password}</td>
-                                        <td>
-                                            <ul>
-                                            <c:forEach var="userRole" items="${user.roles}">
-                                                <li>${userRole.description}</li>
-                                            </c:forEach>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <a href="/users?page=EditUser&id=${user.id}"><span class="glyphicon glyphicon-edit" title="Edit User"></span></a>
-                                            &nbsp;&nbsp;<a href="/users?page=DeleteUser&id=${user.id}"><span class="glyphicon glyphicon-trash" title="Delete User"></span></a>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.box-body -->
-                        <div>
-                            <a class="btn btn-primary" href="/users?page=AddUser">Add new user</a>
-                        </div>
+            <div class="login-box-body">
+                <p class="login-box-msg">User Details</p>
+
+                <form action="/question" method="post">
+                    <input type="hidden" name="page" value="AddQuestion"/>
+
+                    <div class="form-group has-feedback">
+                        <input name="questionText" type="text" class="form-control" placeholder="Question" />
+                        <span class="glyphicon glyphicon-question form-control-feedback"></span>
                     </div>
-                    <!-- /.box -->
-                </div>
-                <!-- /.col -->
+                    <div class="form-group has-feedback">
+                        <input name="option1" type="text" class="form-control" placeholder="First Option" />
+                        <span class="glyphicon glyphicon-question form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <input name="option2" type="text" class="form-control" placeholder="Second Option" />
+                        <span class="glyphicon glyphicon-question form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <input name="option3" type="text" class="form-control" placeholder="Third Option" />
+                        <span class="glyphicon glyphicon-question form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <input name="option4" type="text" class="form-control" placeholder="Fourth Option" >
+                        <span class="glyphicon glyphicon-question form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <input name="correctAns" type="text" class="form-control" placeholder="Correct Answer">
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    </div>
+                    <div class="form-group">
+                        Question Categories
+                        <select name="questionCategories" multiple class="form-control">
+                            <c:forEach var="questionCategory" items="${questionCategories}">
+                                <option value="${questionCategory.id}">${questionCategory.category}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Save</button>
+                    </div>
+                    <!-- /.col -->
+                </form>
+
             </div>
+            <!-- /.login-box-body -->
         </section>
         <!-- /.content -->
     </div>

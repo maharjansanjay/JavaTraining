@@ -1,43 +1,45 @@
-package domain;
+package models;
+
+import java.util.List;
 
 public class User {
     private int id;
+    private String username;
+    private String password;
     private String firstName;
     private String middleName;
     private String lastName;
-    private String username;
-    private String password;
-    private int roleId;
-    private String role;
+    private List<Role> roles;
 
-    public User() {
-        this.id = -1;
-        this.username = this.password = this.role = null;
-    }
-
-    public User(int id,String firstName,String middleName,String lastName, String username, String password,int roleId, String role){
+    public User(int id, String username,String password,String firstName,String middleName,String lastName, List<Role> roles)
+    {
         this.id = id;
+        this.username = username;
+        this.password = password;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.roleId = roleId;
+
+        this.roles = roles;
     }
 
-    public User(int id,String firstName,String middleName,String lastName, String username, String password){
+    public User(int id, String username,String password,String firstName,String middleName,String lastName)
+    {
         this.id = id;
+        this.username = username;
+        this.password = password;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
-        this.username = username;
-        this.password = password;
     }
+
+
+
 
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -56,14 +58,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getFirstName() {
@@ -90,11 +84,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public int getRoleId() {
-        return roleId;
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
