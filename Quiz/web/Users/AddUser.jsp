@@ -79,20 +79,35 @@
                         </div>
                     </c:if>
                     <div class="form-group has-feedback">
+                        <input name="firstName" type="text" class="form-control" placeholder="First Name" value="${firstName}" />
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <input name="middleName" type="text" class="form-control" placeholder="Middle Name" value="${middleName}" />
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <input name="lastName" type="text" class="form-control" placeholder="Last Name" value="${lastName}" />
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
                         <input name="username" type="text" class="form-control" placeholder="Username" value="${username}" />
                         <span class="glyphicon glyphicon-user form-control-feedback"></span>
                     </div>
                     <div class="form-group has-feedback">
-                        <input name="password" type="password" class="form-control" placeholder="Password" >
+                        <input name="password" type="password" minlength="6" class="form-control" placeholder="Password" >
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div>
                     <div class="form-group has-feedback">
-                        <input name="password-confirm" type="password" class="form-control" placeholder="Confirm Password">
+                        <input name="password-confirm" minlength="6" type="password" class="form-control" placeholder="Confirm Password">
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div>
-                    <div class="form-group has-feedback">
-                        <input name="role" type="text" class="form-control" placeholder="User Role" value="${role}"  />
-                        <span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
+                    <div class="form-group">
+                        <select name="role" multiple class="form-control">
+                            <c:forEach var="item" items="${roleLookUp}">
+                                <option value="${item.id}">${item.description}</option>
+                            </c:forEach>
+                        </select>
                     </div>
 
                     <div class="col-xs-4">
