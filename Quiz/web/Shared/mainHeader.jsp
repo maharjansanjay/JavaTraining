@@ -225,7 +225,7 @@
                 </li>
                 <!-- Control Sidebar Toggle Button -->
                 <li>
-                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                    <a href="/login" title="Logout" data-toggle="control-sidebar"><i class="fa fa-power-off"></i></a>
                 </li>
             </ul>
         </div>

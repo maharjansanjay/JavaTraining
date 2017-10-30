@@ -86,10 +86,16 @@
                                     <tr role="row">
                                         <td>${user.username}</td>
                                         <td>${user.password}</td>
-                                        <td>${user.role}</td>
+                                        <td>
+                                            <ul>
+                                            <c:forEach var="userRole" items="${user.roles}">
+                                                <li>${userRole.description}</li>
+                                            </c:forEach>
+                                            </ul>
+                                        </td>
                                         <td>
                                             <a href="/users?page=EditUser&id=${user.id}"><span class="glyphicon glyphicon-edit" title="Edit User"></span></a>
-                                            &nbsp;&nbsp;<a href="/users?page=Delete&id=${user.id}"><span class="glyphicon glyphicon-trash" title="Delete User"></span></a>
+                                            &nbsp;&nbsp;<a href="/users?page=DeleteUser&id=${user.id}"><span class="glyphicon glyphicon-trash" title="Delete User"></span></a>
                                         </td>
                                     </tr>
                                 </c:forEach>

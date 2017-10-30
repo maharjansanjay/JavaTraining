@@ -6,6 +6,7 @@ import services.LookUpItemService;
 import services.UserService;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,21 +29,6 @@ public class UserServlet extends javax.servlet.http.HttpServlet {
 
         switch (page)
         {
-            case "Login": {
-                String username = request.getParameter("username");
-                String password = request.getParameter("password");
-
-
-                User user = userService.isUserValid(username, password);
-                if (user != null) {
-                    RequestDispatcher rd = request.getRequestDispatcher("Users/dashboard.jsp");
-                    rd.forward(request, response);
-                } else {
-                    RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
-                    rd.forward(request, response);
-                }
-                break;
-            }
             case "UserList":
                 {
                     List<User> users = userService.getUsers();
