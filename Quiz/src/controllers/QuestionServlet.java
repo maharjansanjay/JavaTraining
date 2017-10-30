@@ -30,7 +30,11 @@ public class QuestionServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         Object loggedUser = session.getAttribute("loggedUser");
-        
+
+        if (loggedUser == null) {
+            response.sendRedirect("/login");
+            return;
+        }
 
         String page = request.getParameter("page");
 
@@ -55,10 +59,32 @@ public class QuestionServlet extends HttpServlet {
                 response.sendRedirect("/question?page=QuestionList");
             }
             break;
+            case "Quiz":
+            {
+                String qid = request.getParameter("qid");
+                int id = Integer.parseInt(qid);
+                String answer = request.getParameter("selection");
+
+                questionService.saveAnswer(id, answer);
+
+                Question question = questionService.getNextQuestion(id);
+
+                RequestDispatcher rd = request.getRequestDispatcher("Question/Quiz.jsp");
+                request.setAttribute("question", question);
+                rd.forward(request, response);
+            }
         }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        Object loggedUser = session.getAttribute("loggedUser");
+
+        if (loggedUser == null) {
+            response.sendRedirect("/login");
+            return;
+        }
+
         String page = request.getParameter("page");
 
         switch (page) {
@@ -67,6 +93,15 @@ public class QuestionServlet extends HttpServlet {
                 List<Question> questions = questionService.getQuestions();
                 RequestDispatcher rd = request.getRequestDispatcher("Question/QuestionList.jsp");
                 request.setAttribute("questions", questions);
+                rd.forward(request, response);
+            }
+            break;
+            case "Quiz":
+            {
+                Question question = questionService.getQuestion(1);
+
+                RequestDispatcher rd = request.getRequestDispatcher("Question/Quiz.jsp");
+                request.setAttribute("question", question);
                 rd.forward(request, response);
             }
             break;

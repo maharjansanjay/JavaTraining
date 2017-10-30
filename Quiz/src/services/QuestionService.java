@@ -1,5 +1,6 @@
 package services;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import dataAccess.DatabaseConnection;
 import models.QuestionCategory;
 import models.Question;
@@ -8,10 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
@@ -28,7 +26,7 @@ public class QuestionService {
         List<domain.Question> rawQuestions = new ArrayList<>();
         PreparedStatement ps = db.getPreparedStatement("select q.id as questionId, q.questionText, q.option1, q.option2, q.option3, q.option4, q.correctAns," +
                 "qc.id as categoryId, qc.Description as category from quiz.questions q join questionCategoriesMap qcm on qcm.questionId" +
-                "= q.id join questionCategories qc on qc.id = qcm.categoryId");
+                "= q.id join questionCategories qc on qc.id = qcm.categoryId ");
 
         try {
             ps.execute();
@@ -55,6 +53,7 @@ public class QuestionService {
             questions.add(new Question((int)key.get(0),(String) key.get(1),(String) key.get(2),(String)key.get(3),(String) key.get(4),(String) key.get(5), (int) key.get(6),item.getValue()));
         }
 
+        questions.sort((o1, o2)->o1.getId()-o2.getId());
         return questions;
     }
 
@@ -91,6 +90,24 @@ public class QuestionService {
         }
 
         return question;
+    }
+
+    public Question getNextQuestion(int prevId) {
+        List<Question> questions = getQuestions();
+        Boolean currentLocated = false;
+        Question nextQuestion = null;
+
+        for (Question question: questions) {
+            if (currentLocated) {
+                nextQuestion = question;
+                break;
+            }
+            if (question.getId() == prevId) {
+                currentLocated = true;
+            }
+        }
+
+        return nextQuestion;
     }
 
     public void addQuestion(Question question) {
@@ -152,6 +169,11 @@ public class QuestionService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public  void saveAnswer(int id, String answer) {
+        System.out.println(id + "\n");
+        System.out.println(answer);
     }
 
     private void deleteQuestionCategoriesMap(int questionId)
