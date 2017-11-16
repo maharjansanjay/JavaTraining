@@ -2,6 +2,8 @@ package controllers;
 
 import models.Question;
 import models.QuestionCategory;
+import models.Result;
+import models.User;
 import services.LookUpItemService;
 import services.QuestionService;
 
@@ -29,7 +31,7 @@ public class QuestionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        Object loggedUser = session.getAttribute("loggedUser");
+        User loggedUser = (User) session.getAttribute("loggedUser");
 
         if (loggedUser == null) {
             response.sendRedirect("/login");
@@ -61,24 +63,32 @@ public class QuestionServlet extends HttpServlet {
             break;
             case "Quiz":
             {
+                int quizId = (int) session.getAttribute("quizId");
+
                 String qid = request.getParameter("qid");
-                int id = Integer.parseInt(qid);
+                int questionId = Integer.parseInt(qid);
                 String answer = request.getParameter("selection");
 
-                questionService.saveAnswer(id, answer);
+                questionService.saveAnswer(quizId, questionId, answer);
 
-                Question question = questionService.getNextQuestion(id);
+                Question question = questionService.getNextQuestion(questionId);
+
+                if (question == null) {
+                    response.sendRedirect("/question?page=Result");
+                    return;
+                }
 
                 RequestDispatcher rd = request.getRequestDispatcher("Question/Quiz.jsp");
                 request.setAttribute("question", question);
                 rd.forward(request, response);
             }
+            break;
         }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        Object loggedUser = session.getAttribute("loggedUser");
+        User loggedUser = (User) session.getAttribute("loggedUser");
 
         if (loggedUser == null) {
             response.sendRedirect("/login");
@@ -96,11 +106,21 @@ public class QuestionServlet extends HttpServlet {
                 rd.forward(request, response);
             }
             break;
+            case "QuizList":
+            {
+                List<Result> results = questionService.getResults(loggedUser.getId());
+                RequestDispatcher rd = request.getRequestDispatcher("Question/QuizList.jsp");
+                request.setAttribute("quizList", results);
+                rd.forward(request, response);
+            }
+            break;
             case "Quiz":
             {
-                Question question = questionService.getQuestion(1);
+                int quizId = questionService.startNewQuiz(loggedUser.getId());
+                Question question = questionService.getNextQuestion(-1);
 
                 RequestDispatcher rd = request.getRequestDispatcher("Question/Quiz.jsp");
+                session.setAttribute("quizId", quizId);
                 request.setAttribute("question", question);
                 rd.forward(request, response);
             }
@@ -120,6 +140,17 @@ public class QuestionServlet extends HttpServlet {
                 questionService.deleteQuestion(Integer.parseInt(id));
 
                 response.sendRedirect("/question?page=QuestionList");
+            }
+            break;
+            case "Result":
+            {
+                RequestDispatcher rd = request.getRequestDispatcher("Question/Result.jsp");
+                int quizId = (int) session.getAttribute("quizId");
+
+                Result result = questionService.getResult(quizId);
+
+                request.setAttribute("result", result);
+                rd.forward(request, response);
             }
             break;
         }

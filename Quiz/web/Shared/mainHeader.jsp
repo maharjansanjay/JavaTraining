@@ -223,6 +223,11 @@
                         <span class="hidden-xs">Question List</span>
                     </a>
                 </li>
+                <li class="user user-menu">
+                    <a href="/question?page=QuizList">
+                        <span class="hidden-xs">Quiz List</span>
+                    </a>
+                </li>
                 <!-- Control Sidebar Toggle Button -->
                 <li>
                     <a href="/login" title="Logout" data-toggle="control-sidebar"><i class="fa fa-power-off"></i></a>

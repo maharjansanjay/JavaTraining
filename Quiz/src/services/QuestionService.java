@@ -4,6 +4,7 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 import dataAccess.DatabaseConnection;
 import models.QuestionCategory;
 import models.Question;
+import models.Result;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -93,6 +94,11 @@ public class QuestionService {
     }
 
     public Question getNextQuestion(int prevId) {
+
+        if (prevId <= 0) {
+            return getQuestion(1);
+        }
+
         List<Question> questions = getQuestions();
         Boolean currentLocated = false;
         Question nextQuestion = null;
@@ -171,9 +177,113 @@ public class QuestionService {
         }
     }
 
-    public  void saveAnswer(int id, String answer) {
-        System.out.println(id + "\n");
-        System.out.println(answer);
+    public int startNewQuiz(int id) {
+        int quizId = -1;
+        String query = "INSERT INTO `quiz`.`quizuser` (`userId`) VALUES (?);";
+
+        PreparedStatement ps = db.getPreparedStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+        try {
+            ps.setInt(1, id);
+
+            int updatedRows = ps.executeUpdate();
+
+            if (updatedRows == 0 ) {
+                throw new SQLException("Couldn't start new quiz");
+            }
+
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+
+            if (generatedKeys.next()) {
+                quizId = generatedKeys.getInt(1);
+            }
+            else {
+                throw new SQLException("Couldn't fetch generated quiz id.");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return quizId;
+    }
+
+    public void saveAnswer(int quizId, int questionId, String answer) {
+        PreparedStatement ps = db.getPreparedStatement("INSERT INTO `quiz`.`answers` (`questionId`, `quizId`, `answer`) VALUES (?, ?, ?)");
+
+        try {
+            ps.setInt(1, questionId);
+            ps.setInt(2, quizId);
+            ps.setInt(3, Integer.parseInt(answer));
+            ps.execute();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Result getResult(int quizId) {
+        PreparedStatement ps = db.getPreparedStatement("select count(answers.questionId) total, " +
+                "sum(case when answers.answer = questions.correctAns then 1 else 0 end) correct " +
+                "from answers " +
+                "join questions on questions.id = answers.questionId " +
+                "where answers.quizid = ?");
+        Result result = null;
+
+        try {
+            ps.setInt(1, quizId);
+            ps.execute();
+
+            ResultSet rs = ps.getResultSet();
+            int total = 0, correct = 0;
+
+            if (rs.next()) {
+                total = rs.getInt("total");
+                correct = rs.getInt("correct");
+
+                result = new Result(quizId, total, correct);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public List<Result> getResults(int userId) {
+        PreparedStatement ps = db.getPreparedStatement("select answers.quizId qid, count(answers.questionId) total, " +
+                "sum(case when answers.answer = questions.correctAns then 1 else 0 end) correct " +
+                "from answers " +
+                "join questions on questions.id = answers.questionId " +
+                "join quizuser on quizuser.quizId = answers.quizId " +
+                "where quizuser.userId = ? " +
+                "group by answers.quizid");
+        List<Result> result = new ArrayList<Result>();
+
+        try {
+            ps.setInt(1, userId);
+            ps.execute();
+
+            ResultSet rs = ps.getResultSet();
+            int quizId = 0, total = 0, correct = 0;
+
+            while (rs.next()) {
+                quizId = rs.getInt("qid");
+                total = rs.getInt("total");
+                correct = rs.getInt("correct");
+
+                result.add(new Result(quizId, total, correct));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     private void deleteQuestionCategoriesMap(int questionId)
